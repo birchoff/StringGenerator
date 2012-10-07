@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "StringGenerator", "StringGenerator.fsproj", "{A73107EB-FA69-4DAA-9972-E46DC2DDA440}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "StringGenerator.Tests", "..\StringGenerator.Tests\StringGenerator.Tests.fsproj", "{132D116A-18CA-4A94-BCBB-427D5BD1F5E5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{17C93C38-FF3A-4785-A73B-5F4132EDB077}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.MD = ..\README.MD
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A73107EB-FA69-4DAA-9972-E46DC2DDA440}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A73107EB-FA69-4DAA-9972-E46DC2DDA440}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A73107EB-FA69-4DAA-9972-E46DC2DDA440}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A73107EB-FA69-4DAA-9972-E46DC2DDA440}.Release|Any CPU.Build.0 = Release|Any CPU
+		{132D116A-18CA-4A94-BCBB-427D5BD1F5E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{132D116A-18CA-4A94-BCBB-427D5BD1F5E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{132D116A-18CA-4A94-BCBB-427D5BD1F5E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{132D116A-18CA-4A94-BCBB-427D5BD1F5E5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
