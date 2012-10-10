@@ -29,10 +29,9 @@ module RegularExpressionParser
 
     let character = choice [alphaNumeric; numeric; nonAlphaNumeric]
 
-    let regularExpresion = character
+    let regularExpresion = manyStrings character
 
     let parse regExp = 
-        
         match run regularExpresion regExp with
         | Success(result, _, _) -> result
         | Failure(_,_,_) -> ""
