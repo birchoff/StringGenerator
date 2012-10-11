@@ -21,17 +21,39 @@ module RegularExpressionParser
     open FParsec
     open CharParsers
 
-    let nonAlphaNumeric = anyOf "~`!@%&;:'<,>/" |>> string
+    type RegEx = 
+        | RChar of char
+        | RContains of RegEx list
+        | RStartsWith of RegEx list
+        | REndsWith of RegEx list
+        | RExact of RegEx list
+        | RNone
 
-    let alphaNumeric = asciiLetter |>> string
+    let hat = '^'
+    let dollar = '$'
 
-    let numeric = digit |>> string
+    let nonAlphaNumeric = anyOf "~`!@%&;:'<,>/" |>> RChar
+
+    let alphaNumeric = asciiLetter |>> RChar
+
+    let numeric = digit |>> RChar
 
     let character = choice [alphaNumeric; numeric; nonAlphaNumeric]
 
-    let regularExpresion = manyStrings character
+    let elementaryRegularExpression = many character
+
+    let regularExpression = 
+        choice 
+            [
+                lookAhead (skipChar hat >>. elementaryRegularExpression .>> skipChar dollar) |>> RExact;
+                lookAhead (elementaryRegularExpression .>> skipChar dollar) |>> REndsWith;
+                skipChar hat >>. elementaryRegularExpression .>> notFollowedBy (skipChar dollar) |>> RStartsWith;
+                elementaryRegularExpression |>> RContains;
+                //elementaryRegularExpression .>> skipDollar;
+                //elementaryRegularExpression |> between skipHat skipDollar
+            ]
 
     let parse regExp = 
-        match run regularExpresion regExp with
+        match run regularExpression regExp with
         | Success(result, _, _) -> result
-        | Failure(_,_,_) -> ""
+        | Failure(_,_,_) -> RNone

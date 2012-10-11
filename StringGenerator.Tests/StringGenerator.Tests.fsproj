@@ -41,30 +41,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FsUnit.CustomMatchers, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FsUnit.MbUnit">
-      <HintPath>..\StringGenerator\packages\FsUnit.MbUnit.1.1.0.1\Lib\Net40\FsUnit.MbUnit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Gallio, Version=3.3.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Gallio40, Version=3.3.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MbUnit, Version=3.3.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MbUnit40, Version=3.3.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e">
+    <Reference Include="FsUnit.NUnit">
+      <HintPath>..\StringGenerator\packages\FsUnit.1.1.0.1\Lib\Net40\FsUnit.NUnit.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
     </Reference>
-    <Reference Include="NHamcrest, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31c3ea0b6fcf8c4a">
+    <Reference Include="nunit.framework">
+      <HintPath>..\StringGenerator\packages\NUnit.2.6.1\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

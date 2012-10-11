@@ -4,9 +4,8 @@ Description:
 Todo:
 1) Documentation
 2) Currently only support single character regular expression. Must add support for the following
-	i)		starts with and ends with - ^, $
-	ii)		choice - |
-	iii)	charset - [a-z] etc..
-	iv)		star - *
-	v)		plus - +
-	vi)		others - named groupgs
+	i)		choice - |
+	ii)		charset - [a-z] etc..
+	ii)		star - *
+	iv)		plus - +
+	v)		others - named groupgs
