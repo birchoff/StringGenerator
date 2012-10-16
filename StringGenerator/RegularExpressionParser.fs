@@ -16,21 +16,38 @@
 //<set-items>	    ::=	<range> | <char>
 //<range>	        ::=	<char> "-" <char>
 
-// . ^
 module RegularExpressionParser
     open FParsec
     open CharParsers
 
+    ///<summary>
+    ///Traces the execution of a parser.
+    ///</summary>
+    let (<!>) (p: Parser<_,_>) label : Parser<_,_> =
+        fun stream ->
+            printfn "%A: Entering %s" stream.Position label
+            let reply = p stream
+            printfn "%A: Leaving %s (%A)" stream.Position label reply.Status
+            reply
+
     type RegEx = 
+        | RAny
         | RChar of char
-        | RContains of RegEx list
-        | RStartsWith of RegEx list
-        | REndsWith of RegEx list
-        | RExact of RegEx list
+        | RStar of RegEx
+        | RPlus of RegEx
+        | RGroup of RegEx
+        | RStartsWith of RegEx
+        | REndsWith of RegEx
+        | RExact of RegEx
+        | RUnion of RegEx * RegEx
+        | RConcat of RegEx * RegEx
         | RNone
 
     let hat = '^'
     let dollar = '$'
+
+    let regularExpression, regularExpressionRef = createParserForwardedToRef()
+    let simpleRegEx, simpleRegExRef = createParserForwardedToRef()
 
     let nonAlphaNumeric = anyOf "~`!@%&;:'<,>/" |>> RChar
 
@@ -38,20 +55,33 @@ module RegularExpressionParser
 
     let numeric = digit |>> RChar
 
-    let character = choice [alphaNumeric; numeric; nonAlphaNumeric]
+    let character = choice [alphaNumeric; numeric; nonAlphaNumeric;]
 
-    let elementaryRegularExpression = many character
+    let any = skipChar '.' >>% RAny
 
-    let regularExpression = 
-        choice 
-            [
-                lookAhead (skipChar hat >>. elementaryRegularExpression .>> skipChar dollar) |>> RExact;
-                lookAhead (elementaryRegularExpression .>> skipChar dollar) |>> REndsWith;
-                skipChar hat >>. elementaryRegularExpression .>> notFollowedBy (skipChar dollar) |>> RStartsWith;
-                elementaryRegularExpression |>> RContains;
-                //elementaryRegularExpression .>> skipDollar;
-                //elementaryRegularExpression |> between skipHat skipDollar
-            ]
+    let group = attempt (regularExpression |> between (skipChar '(') (skipChar ')')) |>> RGroup
+
+    let elementaryRegEx = choice[group; any; character]
+
+    let star = attempt (elementaryRegEx .>> skipChar '*') |>> RStar
+
+    let plus = attempt (elementaryRegEx .>> skipChar '+') |>> RPlus
+
+    let basicRegEx = choice [star; plus; elementaryRegEx]
+
+    let concatenation = attempt (tuple2 basicRegEx simpleRegEx) |>> RConcat
+
+    do simpleRegExRef := choice [concatenation; basicRegEx]
+
+    let union = attempt (simpleRegEx .>>. (skipChar '|' >>. regularExpression)) |>> RUnion
+
+    let startsWith = attempt (skipChar '^' >>.  choice [union;simpleRegEx]) |>> RStartsWith
+
+    let endsWith = attempt (choice [union;simpleRegEx] .>> skipChar '$') |>> REndsWith
+
+    let exact = attempt (skipChar '^' >>. choice [union;simpleRegEx] .>> skipChar '$') |>> RExact
+
+    do regularExpressionRef := choice [exact; startsWith; endsWith; union; simpleRegEx]
 
     let parse regExp = 
         match run regularExpression regExp with

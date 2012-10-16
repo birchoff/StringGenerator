@@ -33,35 +33,48 @@
                     (fun sb charPos -> sb |> appendCharToStringBuilder (charPos - 1 |> List.nth asciiCharacters)) (new StringBuilder(permMap.Length))
             )
 
-    let regExToString regEx =
-        let rec regExToString (sb:StringBuilder) =
+    let regExToString regex =
+        let rec regExToString (sbs:StringBuilder seq) =
             function
-            | RChar(ch) -> sb.Append(ch)
-            | RStartsWith(regexs) | RContains(regexs) | REndsWith(regexs) | RExact(regexs) -> 
-                regexs |> List.fold (fun sb' regex -> regExToString sb' regex) sb
-            | RNone -> sb
-            
-        (regExToString (new StringBuilder()) regEx).ToString()
+            | RChar(ch) -> seq{for sb in sbs do yield sb.Append(ch)}
+
+            |RConcat(regex1, regex2) -> regex2 |> regExToString (regex1 |> regExToString sbs)
+
+            | RStartsWith(regex') 
+            | REndsWith(regex') 
+            | RExact(regex') -> regExToString sbs regex'
+
+            | RUnion(regexL, regexR) -> 
+                let sbClones = sbs |> Seq.map (fun sb -> new StringBuilder(sb.ToString()))
+                let leftResult = regExToString sbs regexL
+                let rightResult = regExToString sbClones regexR
+                Seq.append leftResult rightResult
+
+            | RNone -> sbs
+        regExToString (seq{yield new StringBuilder()}) regex |> Seq.map (fun sb -> sb.ToString())
 
     let matchingStringsFor regExp length =
         let parseResult = parse regExp
-        let regExString = regExToString parseResult
-        match length, parseResult, length - regExString.Length with
-        | _ when regExString.Length = 0 -> Seq.empty
+        let regExStrings = regExToString parseResult
+        let helper (regExString:string) =
+            match length, parseResult, length - regExString.Length with
+
+            | _ when regExString.Length = 0 -> Seq.empty
         
-        | _, _, difference when difference = 0 -> seq{yield regExString}
+            | _, _, difference when difference = 0 -> seq{yield regExString}
 
-        | _, RContains(_), difference when difference >= 1 -> 
-            generateString difference
-            |> Seq.map (fun sb -> sb.ToString())
-            |> Seq.collect (fun str -> seq{for i in 0 .. str.Length-1 do yield str.Insert(i, regExString)})
+            | _, RStartsWith(_), difference when difference >= 1 -> 
+                generateString difference |> Seq.map (fun sb -> sb.Insert(0, regExString).ToString())
 
-        | _, RStartsWith(_), difference when difference >= 1 -> 
-            generateString difference |> Seq.map (fun sb -> sb.Insert(0, regExString).ToString())
+            | _, REndsWith(_), difference when difference >= 1 -> 
+                generateString difference |> Seq.map (fun sb -> sb.Append(regExString).ToString())
 
-        | _, REndsWith(_), difference when difference >= 1 -> 
-            generateString difference |> Seq.map (fun sb -> sb.Append(regExString).ToString())
+            | _, RExact(_), difference when difference > 0 -> Seq.empty
 
-        | _, RExact(_), difference when difference = 0 -> seq{yield regExString}
+            | _, _, difference when difference >= 1 -> 
+                generateString difference
+                |> Seq.map (fun sb -> sb.ToString())
+                |> Seq.collect (fun str -> seq{for i in 0 .. str.Length-1 do yield str.Insert(i, regExString)})
 
-        | _ -> Seq.empty
+            | _ -> Seq.empty
+        regExStrings |> Seq.collect helper

@@ -112,3 +112,14 @@
     let ``Given the regular expression ^abc$. When generating a matching string whose length is exactly 3 characters. Then the matching string should be abc`` () =
         let results = Generate.matchingStringsFor "^abc$" 3
         results |> Seq.exactlyOne |> should equal "abc"
+
+    [<Test>]
+    let ``Given the regular expression a|b. When generate a matching string whose length is exactly 1 character. Then there should be 2 matching characters``() = 
+        let results = Generate.matchingStringsFor "a|b" 1
+        results |> Seq.length |> should equal 2
+
+    [<Test>]
+    let ``Given the regular expression a|b. When generate a matching string whose length is exactly 1 character. Then the matching strings should contain`` 
+        ([<Values("a", "b")>]matchingString) = 
+        let results = Generate.matchingStringsFor "a|b" 1
+        results |> should contain matchingString
