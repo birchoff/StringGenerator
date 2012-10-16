@@ -10,8 +10,7 @@
 
 - Documentation
 - Add support for the following
-	(i)		choice - |
-	(ii)	charset - [a-z] etc..
+	(i)		charset - [a-z] etc..
 	(ii)	star - *
-	(iv)	plus - +
-	(v)		others - named groupgs
+	(ii)	plus - +
+	(iv)	others - named groupgs
