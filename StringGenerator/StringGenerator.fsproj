@@ -40,7 +40,7 @@
     <None Include="app.config" />
     <Compile Include="RegularExpressionParser.fs" />
     <Compile Include="Generate.fs" />
-    <None Include="interactiveSetup.fsx" />
+    <None Include="InitRepl.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FParsec">

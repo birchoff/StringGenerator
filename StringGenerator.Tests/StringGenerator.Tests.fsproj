@@ -5,12 +5,13 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>132d116a-18ca-4a94-bcbb-427d5bd1f5e5</ProjectGuid>
+    <ProjectGuid>132D116A-18CA-4A94-BCBB-427D5BD1F5E5</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>StringGenerator.Tests</RootNamespace>
     <AssemblyName>StringGenerator.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <Name>StringGenerator.Tests</Name>
+    <ProductVersion>12.0.0</ProductVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,23 +44,18 @@
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
       <HintPath>..\StringGenerator\packages\FsUnit.1.1.0.1\Lib\Net40\FsUnit.NUnit.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="nunit.framework">
       <HintPath>..\StringGenerator\packages\NUnit.2.6.1\lib\nunit.framework.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
     <ProjectReference Include="..\StringGenerator\StringGenerator.fsproj">
       <Name>StringGenerator</Name>
-      <Project>{a73107eb-fa69-4daa-9972-e46dc2dda440}</Project>
-      <Private>True</Private>
+      <Project>A73107EB-FA69-4DAA-9972-E46DC2DDA440</Project>
     </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

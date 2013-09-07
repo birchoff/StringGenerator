@@ -34,6 +34,7 @@
             )
 
     let regExToString regex =
+        let cloneStringBuilders sbs = sbs |> Seq.map (fun sb -> new StringBuilder(sb.ToString()))
         let rec regExToString (sbs:StringBuilder seq) =
             function
             | RChar(ch) -> seq{for sb in sbs do yield sb.Append(ch)}
@@ -45,10 +46,23 @@
             | RExact(regex') -> regExToString sbs regex'
 
             | RUnion(regexL, regexR) -> 
-                let sbClones = sbs |> Seq.map (fun sb -> new StringBuilder(sb.ToString()))
                 let leftResult = regExToString sbs regexL
-                let rightResult = regExToString sbClones regexR
+                let rightResult = regExToString (sbs |> cloneStringBuilders) regexR
                 Seq.append leftResult rightResult
+
+            | RStar(regex') ->
+                (cloneStringBuilders sbs, RNone)
+                |> Seq.unfold 
+                        (
+                            fun state -> 
+                                let result =
+                                    match state with
+                                    | clonedSbs,RNone -> clonedSbs
+                                    | clonedSbs, regex'' -> regExToString clonedSbs regex''
+                                Some(result, (cloneStringBuilders result, regex'))
+                        )
+                |> Seq.collect (fun sbs -> sbs)
+                    
 
             | RNone -> sbs
         regExToString (seq{yield new StringBuilder()}) regex |> Seq.map (fun sb -> sb.ToString())
@@ -77,4 +91,4 @@
                 |> Seq.collect (fun str -> seq{for i in 0 .. str.Length-1 do yield str.Insert(i, regExString)})
 
             | _ -> Seq.empty
-        regExStrings |> Seq.collect helper
+        regExStrings |> Seq.takeWhile (fun regExString -> regExString.Length <= length ) |> Seq.collect helper

@@ -123,3 +123,28 @@
         ([<Values("a", "b")>]matchingString) = 
         let results = Generate.matchingStringsFor "a|b" 1
         results |> should contain matchingString
+
+    [<Test>]
+    let ``Given the regular expression a*. when generating a matching string whose length is 0. Then there should be no matching strings`` () =
+        let results = Generate.matchingStringsFor "a*" 0
+        results |> Seq.length |> should equal 0
+
+    [<Test>]
+    let ``Given the regular expression a*. when generating a matching string whose length is 1. Then there should be two matching strings`` () =
+        let results = Generate.matchingStringsFor "a*" 1
+        results |> Seq.length |> should equal 2
+
+    [<Test>]
+    let ``Given the regular expression ba*. when generating a matching string whose length is 1. Then there should be one matching string`` () =
+        let results = Generate.matchingStringsFor "ba*" 1
+        results |> Seq.length |> should equal 0
+
+    [<Test>]
+    let ``Given the regular expression ba*. when generating a matching string whose length is 1. Then the matching strings should be b`` () =
+        let results = Generate.matchingStringsFor "ba*" 1
+        results|> Seq.exactlyOne |> should equal "b"
+
+    [<Test>]
+    let ``Given the regular expression ba*. when generating a matching string whose length is 2. Then there should be two matching strings`` () =
+        let results = Generate.matchingStringsFor "ba*" 2
+        results |> Seq.length |> should equal 2
